@@ -1,25 +1,68 @@
 import { logger } from '../../hooks';
-import { FormApi, FormApiGetValuesMethodInput, FormApiSetValuesMethodInput, FormValues } from '../../types';
+import {
+	Dictionary,
+	FormApi,
+	FormApiGetErrorsMethodInput,
+	FormApiGetValuesMethodInput,
+	FormApiSetErrorsMethodInput,
+	FormApiSetValuesMethodInput,
+	FormValues,
+} from '../../types';
 
-const store: Record<string, FormValues> = {};
+const store: Record<
+	string,
+	{
+		errors: Dictionary;
+		values: FormValues;
+	}
+> = {};
 
 export const FormStore: Omit<FormApi, 'submit'> = {
+	getErrors: ({ name }: FormApiGetErrorsMethodInput): Dictionary | undefined => {
+		logger('FormStore > getErrors', { name, store });
+
+		try {
+			return store[name]?.errors;
+		} catch (err) {
+			return undefined;
+		}
+	},
+	setErrors: ({ name, errors }: FormApiSetErrorsMethodInput) => {
+		logger('FormStore > setErrors', { name, errors, store });
+
+		try {
+			store[name] = {
+				...store[name],
+				errors: {
+					...store[name]?.errors,
+					...errors,
+				},
+			};
+		} catch (err) {}
+	},
 	getValues: ({ name }: FormApiGetValuesMethodInput): FormValues | undefined => {
 		logger('FormStore > getValues', { name, store });
 
 		try {
-			return store[name];
+			return store[name]?.values;
 		} catch (err) {
 			return undefined;
 		}
 	},
 	setValues: ({ name, values }: FormApiSetValuesMethodInput) => {
-		logger('FormStore > getValues', { name, values, store });
+		logger('FormStore > setValues', {
+			name,
+			values,
+			store,
+		});
 
 		try {
 			store[name] = {
 				...store[name],
-				...values,
+				values: {
+					...store[name]?.values,
+					...values,
+				},
 			};
 		} catch (err) {}
 	},

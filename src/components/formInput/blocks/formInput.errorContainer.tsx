@@ -1,9 +1,9 @@
 import React from 'react';
 import { Form } from '../..';
 import { useLogger } from '../../../hooks';
-import { FormInputApi } from '../../../types';
+import { FormInputChildrenProps } from '../formInput.component';
 
-export const FormInputErrorContainer: React.FC<FormInputApi> = React.memo(props => {
+export const FormInputErrorContainer: React.FC<FormInputChildrenProps> = React.memo(props => {
 	const { render, error } = props;
 
 	const logger = useLogger();

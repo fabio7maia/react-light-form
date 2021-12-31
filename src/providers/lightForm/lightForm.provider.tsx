@@ -3,15 +3,21 @@ import { useLogger } from '../../hooks';
 import { FormStore } from '../../store';
 import {
 	FormApi,
+	FormApiGetErrorsMethodInput,
 	FormApiGetValuesMethodInput,
+	FormApiSetErrorsMethodInput,
 	FormApiSetValuesMethodInput,
 	FormApiSubmitMethodInput,
 	FormMetatada,
 } from '../../types';
 
-const emptyFn = (): undefined => undefined;
+const emptyFn = (): any => {
+	console.log('empty');
+};
 
 const initialFormContext: FormApi = {
+	getErrors: emptyFn,
+	setErrors: emptyFn,
 	getValues: emptyFn,
 	setValues: emptyFn,
 	submit: emptyFn,
@@ -28,6 +34,33 @@ export const LightFormProvider: React.FC = ({ children }) => {
 	const [formsInputsMetadata, setFormsInputsMetadata] = React.useState<FormMetatada>({});
 	const logger = useLogger();
 
+	const handleGetErrors = React.useCallback(
+		({ name }: FormApiGetErrorsMethodInput) => {
+			logger('LightFormProvider > handleGetErrors', { name });
+
+			return FormStore.getErrors({ name });
+		},
+		[logger]
+	);
+
+	const handleSetErrors = React.useCallback(
+		({ name, errors }: FormApiSetErrorsMethodInput) => {
+			logger('LightFormProvider > handleSetErrors', { name, errors });
+
+			FormStore.setErrors({ name, errors });
+
+			setFormsInputsMetadata(oldValue => ({
+				...oldValue,
+				[name]: {
+					changeObjects: Object.keys(errors),
+					timestamp: new Date().getTime(),
+					event: 'setErrors',
+				},
+			}));
+		},
+		[logger, setFormsInputsMetadata]
+	);
+
 	const handleGetValues = React.useCallback(
 		({ name }: FormApiGetValuesMethodInput) => {
 			logger('LightFormProvider > handleGetValues', { name });
@@ -43,13 +76,14 @@ export const LightFormProvider: React.FC = ({ children }) => {
 
 			FormStore.setValues({ name, values });
 
-			setFormsInputsMetadata({
+			setFormsInputsMetadata(oldValue => ({
+				...oldValue,
 				[name]: {
 					changeObjects: Object.keys(values),
 					timestamp: new Date().getTime(),
 					event: 'setValues',
 				},
-			});
+			}));
 		},
 		[logger, setFormsInputsMetadata]
 	);
@@ -57,24 +91,27 @@ export const LightFormProvider: React.FC = ({ children }) => {
 	const handleSubmit = React.useCallback(
 		({ name }: FormApiSubmitMethodInput) => {
 			logger('LightFormProvider > handleSubmit', { name });
-			setFormsMetadata({
+			setFormsMetadata(oldValue => ({
+				...oldValue,
 				[name]: {
 					changeObjects: [],
 					timestamp: new Date().getTime(),
 					event: 'submitted',
 				},
-			});
+			}));
 		},
 		[logger, setFormsMetadata]
 	);
 
 	const lightFormContextValue = React.useMemo(
 		() => ({
+			getErrors: handleGetErrors,
+			setErrors: handleSetErrors,
 			getValues: handleGetValues,
 			setValues: handleSetValues,
 			submit: handleSubmit,
 		}),
-		[handleGetValues, handleSetValues, handleSubmit]
+		[handleGetErrors, handleGetValues, handleSetErrors, handleSetValues, handleSubmit]
 	);
 
 	logger('LightFormProvider > render');

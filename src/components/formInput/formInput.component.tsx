@@ -9,6 +9,7 @@ import {
 import { FormInputApi } from '../../types';
 
 export type FormInputProps = FormInputApi;
+export type FormInputChildrenProps = FormInputProps & { error?: React.ReactNode; value: any };
 
 export const FormInput: React.FC<FormInputProps> = props => {
 	const newProps = useFormInput(props);

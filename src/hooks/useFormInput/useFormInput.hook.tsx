@@ -1,32 +1,59 @@
 import React from 'react';
 import { formContext } from '../../components/form';
-import { formsInputsMetadataContext, lightFormContext } from '../../providers';
+import { formsInputsMetadataContext, formsMetadataContext, lightFormContext } from '../../providers';
 import { FormInputApi } from '../../types';
 import { useLogger } from '..';
 
 export const useFormInput = (props: FormInputApi) => {
-	const { name, onBlur, onChange, onFocus, value, defaultValue } = props;
-	const { getValues, setValues } = React.useContext(lightFormContext);
+	const { name, onBlur, onChange, onFocus, defaultValue, validations } = props;
+	const { getValues, setValues, getErrors, setErrors } = React.useContext(lightFormContext);
 	const { name: formName } = React.useContext(formContext);
+	const formsMetadata = React.useContext(formsMetadataContext);
 	const formsInputsMetadata = React.useContext(formsInputsMetadataContext);
 	const logger = useLogger();
 
-	const getValue = React.useCallback(() => {
-		if (value || onChange) {
-			return value;
-		}
+	const formMetadata = (formsMetadata || {})[formName];
+	const errors = getErrors({ name: formName });
+	const error = errors && errors[name] ? errors[name] : undefined;
+	const values = getValues({ name: formName });
+	const value = values && values[name] ? values[name] : defaultValue || '';
 
-		const values = getValues({ name: formName });
-		if (values && values[name]) {
-			return values[name];
-		}
+	const handleValidate = React.useCallback(
+		value => {
+			logger('useFormInput > handleValidate', {
+				value,
+			});
 
-		return defaultValue || '';
-	}, [defaultValue, formName, getValues, name, onChange, value]);
+			let error = undefined;
+			for (const validation of validations || []) {
+				const res = validation(value);
+				if (res) {
+					error = res.message;
+					break;
+				}
+			}
+
+			setErrors({
+				name: formName,
+				errors: {
+					name: error,
+				},
+			});
+		},
+		[formName, logger, setErrors, validations]
+	);
+
+	// React.useEffect(() => {
+	// 	if (formMetadata?.event === 'submitted') {
+	// 		handleValidate(value);
+	// 	}
+	// }, [formMetadata, handleValidate, value]);
 
 	const handleOnBlur = React.useCallback(() => {
+		handleValidate(value);
+
 		onBlur?.();
-	}, [onBlur]);
+	}, [handleValidate, onBlur, value]);
 
 	const handleOnChange = React.useCallback(
 		evt => {
@@ -47,13 +74,21 @@ export const useFormInput = (props: FormInputApi) => {
 		onFocus?.();
 	}, [onFocus]);
 
-	logger('useFormInput > return', { ...props });
-
-	return {
+	logger('useFormInput > return', {
 		...props,
-		value: getValue(),
-		onBlur: handleOnBlur,
-		onChange: handleOnChange,
-		onFocus: handleOnFocus,
-	};
+		error,
+		value,
+	});
+
+	return React.useMemo(
+		() => ({
+			...props,
+			error,
+			value,
+			onBlur: handleOnBlur,
+			onChange: handleOnChange,
+			onFocus: handleOnFocus,
+		}),
+		[error, handleOnBlur, handleOnChange, handleOnFocus, props, value]
+	);
 };
