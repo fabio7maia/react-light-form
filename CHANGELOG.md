@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/fabio7maia/react-light-form/compare/v1.3.0...v1.4.0) (2022-01-05)
+
+
+### Features
+
+* added validations config to customize when doing validations and show errors ([66fa723](https://github.com/fabio7maia/react-light-form/commit/66fa723674e807051e4a196645ed86bf47e24126))
+
 # [1.3.0](https://github.com/fabio7maia/react-light-form/compare/v1.2.0...v1.3.0) (2022-01-05)
 
 
