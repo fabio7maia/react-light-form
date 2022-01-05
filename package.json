@@ -1,6 +1,6 @@
 {
 	"name": "react-light-form",
-	"version": "0.1.0",
+	"version": "0.0.0",
 	"description": "This is a React JS library to simplify the form management with focus in optimization and customization.",
 	"main": "dist/index.js",
 	"module": "src/index.js",
