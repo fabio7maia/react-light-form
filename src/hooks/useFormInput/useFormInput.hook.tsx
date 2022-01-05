@@ -1,59 +1,88 @@
 import React from 'react';
 import { formContext } from '../../components/form';
-import { formsInputsMetadataContext, formsMetadataContext, lightFormContext } from '../../providers';
 import { FormInputApi } from '../../types';
-import { useLogger } from '..';
+import {
+	getUseFormEventHubKey,
+	useEventHubSubscriber,
+	useForceUpdate,
+	UseFormEventHubPayloadData,
+	useLogger,
+} from '..';
+import { FormStore } from '../../helpers';
 
 export const useFormInput = (props: FormInputApi) => {
 	const { name, onBlur, onChange, onFocus, defaultValue, validations } = props;
-	const { getValues, setValues, getErrors, setErrors } = React.useContext(lightFormContext);
 	const { name: formName } = React.useContext(formContext);
-	const formsMetadata = React.useContext(formsMetadataContext);
-	const formsInputsMetadata = React.useContext(formsInputsMetadataContext);
 	const logger = useLogger();
+	const forceUpdate = useForceUpdate();
 
-	const formMetadata = (formsMetadata || {})[formName];
-	const errors = getErrors({ name: formName });
-	const error = errors && errors[name] ? errors[name] : undefined;
-	const values = getValues({ name: formName });
-	const value = values && values[name] ? values[name] : defaultValue || '';
+	const handleValidate = React.useCallback(() => {
+		const value = FormStore.getValues({ name: formName })[name];
+		logger('useFormInput > handleValidate', {
+			value,
+		});
 
-	const handleValidate = React.useCallback(
-		value => {
-			logger('useFormInput > handleValidate', {
-				value,
-			});
-
-			let error = undefined;
-			for (const validation of validations || []) {
-				const res = validation(value);
-				if (res) {
-					error = res.message;
-					break;
-				}
+		let error = undefined;
+		for (const validation of validations || []) {
+			const res = validation(value);
+			if (res) {
+				error = res.message;
+				break;
 			}
+		}
 
-			setErrors({
-				name: formName,
-				errors: {
-					name: error,
-				},
+		FormStore.setErrors({
+			name: formName,
+			errors: {
+				[name]: error,
+			},
+		});
+	}, [formName, logger, name, validations]);
+
+	React.useEffect(() => {
+		const value = defaultValue || '';
+		FormStore.setValues({ name: formName, values: { [name]: value } });
+		FormStore.setErrors({ name: formName, errors: {} });
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [formName, name]);
+
+	useEventHubSubscriber<UseFormEventHubPayloadData>({
+		callback: ({ payload }) => {
+			logger('useFormInput > useEventHubSubscriber', {
+				...props,
+				payload,
 			});
-		},
-		[formName, logger, setErrors, validations]
-	);
 
-	// React.useEffect(() => {
-	// 	if (formMetadata?.event === 'submitted') {
-	// 		handleValidate(value);
-	// 	}
-	// }, [formMetadata, handleValidate, value]);
+			if (
+				(payload.status === 'setErrors' && Object.keys(payload.errors).includes(name)) ||
+				(payload.status === 'setValues' && Object.keys(payload.values).includes(name))
+			) {
+				logger('useFormInput > useEventHubSubscriber > forceUpdate', {
+					...props,
+					payload,
+				});
+
+				forceUpdate();
+			} else if (payload.status === 'submitted') {
+				handleValidate();
+
+				forceUpdate();
+			}
+		},
+		key: getUseFormEventHubKey(formName),
+		options: {
+			refresh: false,
+		},
+	});
 
 	const handleOnBlur = React.useCallback(() => {
-		handleValidate(value);
+		handleValidate();
 
 		onBlur?.();
-	}, [handleValidate, onBlur, value]);
+
+		forceUpdate();
+	}, [forceUpdate, handleValidate, onBlur]);
 
 	const handleOnChange = React.useCallback(
 		evt => {
@@ -63,16 +92,22 @@ export const useFormInput = (props: FormInputApi) => {
 				value,
 			});
 
-			setValues({ name: formName, values: { [name]: value } });
+			FormStore.setErrors({ name: formName, errors: { [name]: undefined } });
+			FormStore.setValues({ name: formName, values: { [name]: value } });
 
 			onChange?.(value);
+
+			forceUpdate();
 		},
-		[formName, logger, name, onChange, setValues]
+		[forceUpdate, formName, logger, name, onChange]
 	);
 
 	const handleOnFocus = React.useCallback(() => {
 		onFocus?.();
 	}, [onFocus]);
+
+	const error = FormStore.getErrors({ name: formName })[name];
+	const value = FormStore.getValues({ name: formName })[name];
 
 	logger('useFormInput > return', {
 		...props,

@@ -30,8 +30,16 @@ export const BasicForm: React.FC = () => {
 
 	return (
 		<Form {...getFormProps()} onSubmit={handleOnSubmit}>
-			<Form.Input name="name" label="Name" validations={[() => ({ message: 'Required' })]} />
-			<Form.Input name="email" label="Email" />
+			<Form.Input
+				name="name"
+				label="Name"
+				validations={[value => (value ? undefined : { message: 'Required' })]}
+			/>
+			<Form.Input
+				name="email"
+				label="Email"
+				validations={[value => (value ? undefined : { message: 'Required' })]}
+			/>
 			<button type="button" style={{ margin: '50px 0 0 0' }} onClick={submit}>
 				Save
 			</button>

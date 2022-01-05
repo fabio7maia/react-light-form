@@ -1,6 +1,11 @@
 import React from 'react';
-import { useLogger } from '../../hooks';
-import { formsMetadataContext, lightFormContext } from '../../providers';
+import {
+	getUseFormEventHubKey,
+	useEventHubSubscriber,
+	useForm,
+	UseFormEventHubPayloadData,
+	useLogger,
+} from '../../hooks';
 import { FormValues } from '../../types';
 
 export const formContext = React.createContext({
@@ -13,36 +18,32 @@ export interface FormProps {
 }
 
 export const Form: React.FC<FormProps> = ({ children, name: nameProp, onSubmit }) => {
-	const { getValues } = React.useContext(lightFormContext);
-	const formsMetadata = React.useContext(formsMetadataContext);
 	const name = React.useRef(nameProp || `form_${new Date().getTime().toString()}`);
-	const currentFormMetadata = formsMetadata[name.current];
-	const lastEvent = React.useRef(currentFormMetadata);
 	const logger = useLogger();
 	const formContextValue = React.useMemo(() => ({ name: name.current }), []);
+	const { getValues } = useForm({ name: name.current });
 
 	const handleOnSubmit = React.useCallback(() => {
-		const values = getValues({ name: name.current });
+		const values = getValues();
 
 		logger('Form > handleOnSubmit', { values });
 
 		onSubmit(values);
 	}, [getValues, logger, onSubmit]);
 
-	React.useEffect(() => {
-		logger('Form > useEffect', {
-			lastEvent: lastEvent.current,
-			currentFormMetadata,
-		});
-		if (
-			currentFormMetadata?.event === 'submitted' &&
-			(!lastEvent.current || lastEvent.current?.timestamp < currentFormMetadata?.timestamp)
-		) {
-			handleOnSubmit();
-		}
-	}, [currentFormMetadata, handleOnSubmit, logger]);
+	useEventHubSubscriber<UseFormEventHubPayloadData>({
+		name: getUseFormEventHubKey(name.current),
+		callback: ({ payload }) => {
+			if (payload.status === 'submitted') {
+				handleOnSubmit();
+			}
+		},
+		options: {
+			refresh: false,
+		},
+	});
 
-	logger('Form > render', { currentFormMetadata, name: name.current });
+	logger('Form > render', { name: name.current });
 
 	return (
 		<formContext.Provider value={formContextValue}>

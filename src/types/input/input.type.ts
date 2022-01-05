@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { HTMLInputTypeAttribute } from 'react';
 
 interface BaseFormInputApi {
 	name: string;
@@ -21,6 +21,7 @@ export interface FormInputRender {
 
 export interface FormInputApi {
 	name: string;
+	type?: HTMLInputTypeAttribute;
 	label?: React.ReactNode;
 	defaultValue?: any;
 	validations?: any[];

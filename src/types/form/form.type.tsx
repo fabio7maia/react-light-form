@@ -2,6 +2,8 @@
 export type Dictionary = Record<string, any>;
 export type FormValues = Dictionary;
 
+export type FormStatus = 'submitted' | 'setValues' | 'setErrors';
+
 export interface FormApiBaseMethodInput {
 	name: string;
 }
@@ -18,13 +20,11 @@ export interface FormApiSetValuesMethodInput extends FormApiBaseMethodInput {
 	values: FormValues;
 }
 
-export type FormApiSubmitMethodInput = FormApiBaseMethodInput;
-
-export interface FormStatus {
-	event: 'setErrors' | 'setValues' | 'submitted';
-	timestamp: number;
-	changeObjects: string[];
+export interface FormApiSetStatusMethodInput extends FormApiBaseMethodInput {
+	status: FormStatus;
 }
+
+export type FormApiSubmitMethodInput = FormApiBaseMethodInput;
 
 export type FormMetatada = Record<string, FormStatus>;
 
