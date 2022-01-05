@@ -2,16 +2,17 @@ import React from 'react';
 import { useEventHubEmitter, useLogger } from '..';
 import { formContext } from '../../components/form';
 import { FormStore } from '../../helpers';
-import { Dictionary, FormStatus, FormValues } from '../../types';
+import { Dictionary, FormStatus, FormValidationItem, FormValues } from '../../types';
 
 interface UseFormInput {
 	name?: string;
+	validations?: Record<string, FormValidationItem[]>;
 }
 
 export const getUseFormEventHubKey = (name: string): string => `form_${name}`;
 export type UseFormEventHubPayloadData = { status: FormStatus; errors?: Dictionary; values?: FormValues };
 
-export const useForm = ({ name: nameProp }: UseFormInput = {}) => {
+export const useForm = ({ name: nameProp, validations = {} }: UseFormInput = {}) => {
 	const currentForm = React.useContext(formContext);
 	const name = React.useRef(nameProp || currentForm.name || `form_${new Date().getTime()}`);
 	const logger = useLogger();
@@ -21,6 +22,14 @@ export const useForm = ({ name: nameProp }: UseFormInput = {}) => {
 		logger('useForm > handleGetFormProps', { name: name.current });
 		return { name: name.current };
 	}, [logger]);
+
+	const handleGetFormInputProps = React.useCallback(
+		({ name }: { name: string }) => {
+			logger('useForm > handleGetFormInputProps', { name });
+			return { name, validations: validations[name] };
+		},
+		[logger, validations]
+	);
 
 	const handleGetErrors = React.useCallback(() => {
 		const errors = FormStore.getErrors({ name: name.current });
@@ -104,12 +113,21 @@ export const useForm = ({ name: nameProp }: UseFormInput = {}) => {
 		() => ({
 			name: name.current,
 			getFormProps: handleGetFormProps,
+			getFormInputProps: handleGetFormInputProps,
 			getErrors: handleGetErrors,
 			setErrors: handleSetErrors,
 			getValues: handleGetValues,
 			setValues: handleSetValues,
 			submit: handleSubmit,
 		}),
-		[handleGetErrors, handleGetFormProps, handleGetValues, handleSetErrors, handleSetValues, handleSubmit]
+		[
+			handleGetErrors,
+			handleGetFormInputProps,
+			handleGetFormProps,
+			handleGetValues,
+			handleSetErrors,
+			handleSetValues,
+			handleSubmit,
+		]
 	);
 };

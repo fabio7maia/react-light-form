@@ -10,8 +10,15 @@ interface FormInputConfiguration {
 	errorContainer?: (props: FormInputApi) => React.ReactNode;
 }
 
+type FormInputConfigurationTypes = 'container' | 'labelContainer' | 'inputContainer' | 'errorContainer';
+
+type FormConfigurationGetConfigMethodInput = {
+	type: FormInputConfigurationTypes;
+	variant?: string;
+};
+
 interface FormConfig {
-	input?: FormInputConfiguration;
+	input?: FormInputConfiguration | (Record<string, FormInputConfiguration> & { default: FormInputConfiguration });
 }
 
 class FormConfiguration {
@@ -30,8 +37,25 @@ class FormConfiguration {
 		FormConfiguration._config = config;
 	};
 
-	static getConfig = (): FormConfig | undefined => {
-		return FormConfiguration._config;
+	static getConfig = ({
+		type,
+		variant,
+	}: FormConfigurationGetConfigMethodInput): ((props: FormInputApi) => React.ReactNode | undefined) => {
+		const config = FormConfiguration._config;
+
+		if (!config) {
+			return;
+		}
+
+		if (typeof config.input['default'] === 'object') {
+			if (variant && config.input[variant][type]) {
+				return config.input[variant][type];
+			}
+
+			return config.input['default'][type];
+		}
+
+		return config.input[type] as (props: FormInputApi) => React.ReactNode | undefined;
 	};
 }
 

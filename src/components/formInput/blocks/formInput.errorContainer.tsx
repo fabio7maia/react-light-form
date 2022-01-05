@@ -4,20 +4,20 @@ import { useLogger } from '../../../hooks';
 import { FormInputChildrenProps } from '../formInput.component';
 
 export const FormInputErrorContainer: React.FC<FormInputChildrenProps> = React.memo(props => {
-	const { render, error } = props;
+	const { render, error, variant } = props;
 
 	const logger = useLogger();
 
 	logger('FormInputErrorContainer > render', {
 		props,
-		config: Form.getConfig(),
+		config: Form.getConfig({ type: 'errorContainer', variant }),
 	});
 
 	if (render?.errorContainer) {
 		return <>{render.errorContainer(props)}</>;
 	}
 
-	const containerConfig = Form.getConfig()?.input?.errorContainer;
+	const containerConfig = Form.getConfig({ type: 'errorContainer', variant });
 	if (containerConfig) {
 		return <>{containerConfig(props)}</>;
 	}

@@ -19,13 +19,18 @@ export interface FormInputRender {
 	errorContainer?: (props: BaseFormInputApi) => React.ReactNode;
 }
 
+export type FormValidationOutput = undefined | { message: string; value?: string };
+
+export type FormValidationItem = (value?: any) => FormValidationOutput;
+
 export interface FormInputApi {
 	name: string;
 	type?: HTMLInputTypeAttribute;
 	label?: React.ReactNode;
 	defaultValue?: any;
-	validations?: any[];
+	validations?: FormValidationItem[];
 	render?: FormInputRender;
+	variant?: string;
 	onBlur?: () => void;
 	onChange?: (value?: any) => void;
 	onFocus?: () => void;

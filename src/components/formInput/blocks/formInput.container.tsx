@@ -4,22 +4,25 @@ import { useLogger } from '../../../hooks';
 import { FormInputChildrenProps } from '../formInput.component';
 
 export const FormInputContainer: React.FC<FormInputChildrenProps> = props => {
-	const { render, children } = props;
+	const passedProps = { ...props };
+	delete passedProps.onChange;
+
+	const { render, children, variant } = props;
 
 	const logger = useLogger();
 
 	logger('FormInputContainer > render', {
 		props,
-		config: Form.getConfig(),
+		config: Form.getConfig({ type: 'container', variant }),
 	});
 
 	if (render?.container) {
-		return <>{render.container(props)}</>;
+		return <>{render.container(passedProps)}</>;
 	}
 
-	const containerConfig = Form.getConfig()?.input?.container;
+	const containerConfig = Form.getConfig({ type: 'container', variant });
 	if (containerConfig) {
-		return <>{containerConfig(props)}</>;
+		return <>{containerConfig(passedProps)}</>;
 	}
 
 	return <div style={{ display: 'flex', flexDirection: 'column' }}>{children}</div>;

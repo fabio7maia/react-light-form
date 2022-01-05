@@ -54,17 +54,17 @@ export const useFormInput = (props: FormInputApi) => {
 				payload,
 			});
 
-			if (
-				(payload.status === 'setErrors' && Object.keys(payload.errors).includes(name)) ||
-				(payload.status === 'setValues' && Object.keys(payload.values).includes(name))
-			) {
+			if (payload.status === 'setErrors' && Object.keys(payload.errors).includes(name)) {
 				logger('useFormInput > useEventHubSubscriber > forceUpdate', {
 					...props,
 					payload,
 				});
 
 				forceUpdate();
-			} else if (payload.status === 'submitted') {
+			} else if (
+				(payload.status === 'setValues' && Object.keys(payload.values).includes(name)) ||
+				payload.status === 'submitted'
+			) {
 				handleValidate();
 
 				forceUpdate();
