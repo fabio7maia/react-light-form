@@ -1,5 +1,5 @@
 export const logger = (msg: string, rest?: any): void => {
-	if (true) {
+	if (false) {
 		console.log(msg, rest);
 	}
 };
