@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/fabio7maia/react-light-form/compare/v1.4.0...v1.5.0) (2022-01-05)
+
+
+### Features
+
+* removed logger ([7ea35dc](https://github.com/fabio7maia/react-light-form/commit/7ea35dccd5b367e4b95de709c61a83f471c43603))
+
 # [1.4.0](https://github.com/fabio7maia/react-light-form/compare/v1.3.0...v1.4.0) (2022-01-05)
 
 
