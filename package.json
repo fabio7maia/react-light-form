@@ -7,6 +7,15 @@
 	"publishConfig": {
 		"access": "public"
 	},
+	"license": "MIT",
+	"keywords": [
+		"react",
+		"forms",
+		"inputs",
+		"simple",
+		"optimized",
+		"uncontrolled"
+	],
 	"files": [
 		"dist/"
 	],

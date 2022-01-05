@@ -32,7 +32,7 @@ export const Form: React.FC<FormProps> = ({ children, name: nameProp, onSubmit }
 	}, [getValues, logger, onSubmit]);
 
 	useEventHubSubscriber<UseFormEventHubPayloadData>({
-		name: getUseFormEventHubKey(name.current),
+		key: getUseFormEventHubKey(name.current),
 		callback: ({ payload }) => {
 			if (payload.status === 'submitted') {
 				handleOnSubmit();
