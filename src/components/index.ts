@@ -17,8 +17,16 @@ type FormConfigurationGetConfigMethodInput = {
 	variant?: string;
 };
 
+type FormConfigurationValidations = {
+	/**
+	 * Default validations has fired in 'blur'
+	 */
+	fired: 'change' | 'blur';
+};
+
 interface FormConfig {
 	input?: FormInputConfiguration | (Record<string, FormInputConfiguration> & { default: FormInputConfiguration });
+	validations?: FormConfigurationValidations;
 }
 
 class FormConfiguration {
@@ -37,7 +45,7 @@ class FormConfiguration {
 		FormConfiguration._config = config;
 	};
 
-	static getConfig = ({
+	static getConfigInput = ({
 		type,
 		variant,
 	}: FormConfigurationGetConfigMethodInput): ((props: FormInputApi) => React.ReactNode | undefined) => {
@@ -57,10 +65,14 @@ class FormConfiguration {
 
 		return config.input[type] as (props: FormInputApi) => React.ReactNode | undefined;
 	};
+	static getConfigValidations = (): FormConfigurationValidations | undefined => {
+		return FormConfiguration._config.validations;
+	};
 }
 
 export const Form = Object.assign(FormComponent, {
 	Input: FormInput,
 	configure: FormConfiguration.configure,
-	getConfig: FormConfiguration.getConfig,
+	getConfigInput: FormConfiguration.getConfigInput,
+	getConfigValidations: FormConfiguration.getConfigValidations,
 });

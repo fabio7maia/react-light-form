@@ -13,14 +13,14 @@ export const FormInputContainer: React.FC<FormInputChildrenProps> = props => {
 
 	logger('FormInputContainer > render', {
 		props,
-		config: Form.getConfig({ type: 'container', variant }),
+		config: Form.getConfigInput({ type: 'container', variant }),
 	});
 
 	if (render?.container) {
 		return <>{render.container(passedProps)}</>;
 	}
 
-	const containerConfig = Form.getConfig({ type: 'container', variant });
+	const containerConfig = Form.getConfigInput({ type: 'container', variant });
 	if (containerConfig) {
 		return <>{containerConfig(passedProps)}</>;
 	}

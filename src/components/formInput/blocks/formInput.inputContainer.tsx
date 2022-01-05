@@ -10,14 +10,14 @@ export const FormInputInputContainer: React.FC<FormInputChildrenProps> = React.m
 
 	logger('FormInputInputContainer > render', {
 		props,
-		config: Form.getConfig({ type: 'inputContainer', variant }),
+		config: Form.getConfigInput({ type: 'inputContainer', variant }),
 	});
 
 	if (render?.inputContainer) {
 		return <>{render.inputContainer(props)}</>;
 	}
 
-	const containerConfig = Form.getConfig({ type: 'inputContainer', variant });
+	const containerConfig = Form.getConfigInput({ type: 'inputContainer', variant });
 	if (containerConfig) {
 		return <>{containerConfig(props)}</>;
 	}

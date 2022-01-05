@@ -10,14 +10,14 @@ export const FormInputErrorContainer: React.FC<FormInputChildrenProps> = React.m
 
 	logger('FormInputErrorContainer > render', {
 		props,
-		config: Form.getConfig({ type: 'errorContainer', variant }),
+		config: Form.getConfigInput({ type: 'errorContainer', variant }),
 	});
 
 	if (render?.errorContainer) {
 		return <>{render.errorContainer(props)}</>;
 	}
 
-	const containerConfig = Form.getConfig({ type: 'errorContainer', variant });
+	const containerConfig = Form.getConfigInput({ type: 'errorContainer', variant });
 	if (containerConfig) {
 		return <>{containerConfig(props)}</>;
 	}

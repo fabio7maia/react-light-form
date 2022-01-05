@@ -10,14 +10,14 @@ export const FormInputLabelContainer: React.FC<FormInputChildrenProps> = React.m
 
 	logger('FormInputLabelContainer > render', {
 		props,
-		config: Form.getConfig({ type: 'labelContainer', variant }),
+		config: Form.getConfigInput({ type: 'labelContainer', variant }),
 	});
 
 	if (render?.labelContainer) {
 		return <>{render.labelContainer(props)}</>;
 	}
 
-	const containerConfig = Form.getConfig({ type: 'labelContainer', variant });
+	const containerConfig = Form.getConfigInput({ type: 'labelContainer', variant });
 	if (containerConfig) {
 		return <>{containerConfig(props)}</>;
 	}

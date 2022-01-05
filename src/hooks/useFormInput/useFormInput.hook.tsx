@@ -1,4 +1,5 @@
 import React from 'react';
+import { Form } from '../../components';
 import { formContext } from '../../components/form';
 import { FormInputApi } from '../../types';
 import {
@@ -77,29 +78,38 @@ export const useFormInput = (props: FormInputApi) => {
 	});
 
 	const handleOnBlur = React.useCallback(() => {
-		handleValidate();
+		const configValidations = Form.getConfigValidations();
+
+		if ((configValidations?.fired || 'blur') === 'blur') {
+			handleValidate();
+			forceUpdate();
+		}
 
 		onBlur?.();
-
-		forceUpdate();
 	}, [forceUpdate, handleValidate, onBlur]);
 
 	const handleOnChange = React.useCallback(
 		evt => {
+			const configValidations = Form.getConfigValidations();
 			const { value } = evt.currentTarget;
 
 			logger('useFormInput > handleOnChange', {
 				value,
 			});
 
-			FormStore.setErrors({ name: formName, errors: { [name]: undefined } });
 			FormStore.setValues({ name: formName, values: { [name]: value } });
 
-			onChange?.(value);
+			if ((configValidations?.fired || 'blur') === 'change') {
+				handleValidate();
+			} else {
+				FormStore.setErrors({ name: formName, errors: { [name]: undefined } });
+			}
 
 			forceUpdate();
+
+			onChange?.(value);
 		},
-		[forceUpdate, formName, logger, name, onChange]
+		[forceUpdate, formName, handleValidate, logger, name, onChange]
 	);
 
 	const handleOnFocus = React.useCallback(() => {

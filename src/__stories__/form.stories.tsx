@@ -76,6 +76,9 @@ Form.configure({
 			),
 		},
 	},
+	validations: {
+		fired: 'change',
+	},
 });
 
 const template = (): JSX.Element => <BasicForm />;
