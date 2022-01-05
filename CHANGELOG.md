@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/fabio7maia/react-light-form/compare/v1.2.0...v1.3.0) (2022-01-05)
+
+
+### Features
+
+* added variant and validations in useForm hook ([dbf61dd](https://github.com/fabio7maia/react-light-form/commit/dbf61dd641a1b67229f1897b8c064b61deb873fc))
+
 # [1.2.0](https://github.com/fabio7maia/react-light-form/compare/v1.1.0...v1.2.0) (2022-01-05)
 
 
