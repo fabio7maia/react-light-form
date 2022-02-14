@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/fabio7maia/react-light-form/compare/v1.5.0...v1.6.0) (2022-02-14)
+
+
+### Features
+
+* refine form input ([e67eb88](https://github.com/fabio7maia/react-light-form/commit/e67eb88a693c32f469ddf7af6e8174282354380d))
+
 # [1.5.0](https://github.com/fabio7maia/react-light-form/compare/v1.4.0...v1.5.0) (2022-01-05)
 
 
