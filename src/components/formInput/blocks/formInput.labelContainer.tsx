@@ -23,7 +23,7 @@ export const FormInputLabelContainer: React.FC<FormInputChildrenProps> = React.m
 	}
 
 	return (
-		<div style={{ display: 'flex', margin: '5px 0' }}>
+		<div style={{ display: 'flex', margin: '4px 0' }}>
 			<label htmlFor={name}>{label}</label>
 		</div>
 	);

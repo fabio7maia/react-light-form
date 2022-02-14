@@ -2,12 +2,10 @@ import React from 'react';
 import { Form } from '../..';
 import { useLogger } from '../../../hooks';
 import { FormInputChildrenProps } from '../formInput.component';
+import { FormInputErrorContainer, FormInputInputContainer, FormInputLabelContainer } from '.';
 
 export const FormInputContainer: React.FC<FormInputChildrenProps> = props => {
-	const passedProps = { ...props };
-	delete passedProps.onChange;
-
-	const { render, children, variant } = props;
+	const { render, variant } = props;
 
 	const logger = useLogger();
 
@@ -15,6 +13,17 @@ export const FormInputContainer: React.FC<FormInputChildrenProps> = props => {
 		props,
 		config: Form.getConfigInput({ type: 'container', variant }),
 	});
+
+	const labelContainerRender = (): React.ReactNode => <FormInputLabelContainer {...props} />;
+	const inputContainerRender = (): React.ReactNode => <FormInputInputContainer {...props} />;
+	const errorContainerRender = (): React.ReactNode => <FormInputErrorContainer {...props} />;
+
+	const passedProps = {
+		...props,
+		labelContainerRender,
+		inputContainerRender,
+		errorContainerRender,
+	};
 
 	if (render?.container) {
 		return <>{render.container(passedProps)}</>;
@@ -25,5 +34,11 @@ export const FormInputContainer: React.FC<FormInputChildrenProps> = props => {
 		return <>{containerConfig(passedProps)}</>;
 	}
 
-	return <div style={{ display: 'flex', flexDirection: 'column' }}>{children}</div>;
+	return (
+		<div style={{ display: 'flex', flexDirection: 'column' }}>
+			{labelContainerRender()}
+			{inputContainerRender()}
+			{errorContainerRender()}
+		</div>
+	);
 };

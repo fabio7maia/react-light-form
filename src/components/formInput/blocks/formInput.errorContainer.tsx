@@ -22,5 +22,5 @@ export const FormInputErrorContainer: React.FC<FormInputChildrenProps> = React.m
 		return <>{containerConfig(props)}</>;
 	}
 
-	return error ? <div style={{ display: 'flex', color: 'red', padding: '5px 0' }}>{error}</div> : null;
+	return error ? <div style={{ display: 'flex', color: 'red', padding: '4px 0' }}>{error}</div> : null;
 });

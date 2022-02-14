@@ -22,5 +22,9 @@ export const FormInputInputContainer: React.FC<FormInputChildrenProps> = React.m
 		return <>{containerConfig(props)}</>;
 	}
 
-	return <input {...props} />;
+	return (
+		<div style={{ display: 'flex', margin: '4px 0', width: '100%' }}>
+			<input style={{ width: '100%' }} {...props} />
+		</div>
+	);
 });

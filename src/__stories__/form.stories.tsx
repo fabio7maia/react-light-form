@@ -13,20 +13,25 @@ export default story.meta;
 Form.configure({
 	input: {
 		default: {
-			container: props => {
-				console.log('Form.configure > container', { props });
-				return (
+			container: ({ errorContainerRender, inputContainerRender, labelContainerRender }): React.ReactNode => (
+				<div>
 					<div
-						{...props}
 						style={{
+							width: '100%',
+							display: 'flex',
+							flexDirection: 'column',
 							border: '2px solid gray',
 							borderRadius: '8px',
 							padding: '4px',
 						}}
-					/>
-				);
-			},
-			inputContainer: props => (
+					>
+						{labelContainerRender()}
+						{inputContainerRender()}
+					</div>
+					{errorContainerRender()}
+				</div>
+			),
+			inputContainer: (props): React.ReactNode => (
 				<input
 					{...props}
 					style={{
@@ -36,7 +41,7 @@ Form.configure({
 					}}
 				/>
 			),
-			labelContainer: ({ label, name }) => (
+			labelContainer: ({ label, name }): React.ReactNode => (
 				<div style={{ textAlign: 'left' }}>
 					<label htmlFor={name} style={{ color: 'gray' }}>
 						{label}
@@ -45,19 +50,19 @@ Form.configure({
 			),
 		},
 		simple: {
-			container: props => {
-				console.log('Form.configure > container', { props });
-				return (
-					<div
-						{...props}
-						style={{
-							border: '0',
-							padding: '4px',
-						}}
-					/>
-				);
-			},
-			inputContainer: props => (
+			container: ({ errorContainerRender, inputContainerRender, labelContainerRender }): React.ReactNode => (
+				<div
+					style={{
+						border: '0',
+						padding: '4px',
+					}}
+				>
+					{labelContainerRender()}
+					{inputContainerRender()}
+					{errorContainerRender()}
+				</div>
+			),
+			inputContainer: (props): React.ReactNode => (
 				<input
 					{...props}
 					style={{
@@ -67,7 +72,7 @@ Form.configure({
 					}}
 				/>
 			),
-			labelContainer: ({ label, name }) => (
+			labelContainer: ({ label, name }): React.ReactNode => (
 				<div style={{ textAlign: 'left' }}>
 					<label htmlFor={name} style={{}}>
 						{label}

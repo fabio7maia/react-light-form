@@ -4,7 +4,13 @@ import { FormInput } from './formInput';
 import { FormInputApi } from '../types';
 
 interface FormInputConfiguration {
-	container?: (props: FormInputApi & { children?: React.ReactNode }) => React.ReactNode;
+	container?: (
+		props: FormInputApi & {
+			labelContainerRender: () => React.ReactNode;
+			inputContainerRender: () => React.ReactNode;
+			errorContainerRender: () => React.ReactNode;
+		}
+	) => React.ReactNode;
 	labelContainer?: (props: FormInputApi) => React.ReactNode;
 	inputContainer?: (props: FormInputApi) => React.ReactNode;
 	errorContainer?: (props: FormInputApi) => React.ReactNode;
