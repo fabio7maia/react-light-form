@@ -1,4 +1,4 @@
-import React, { HTMLInputTypeAttribute } from 'react';
+import React from 'react';
 
 interface BaseFormInputApi {
 	name: string;
@@ -23,11 +23,26 @@ export type FormValidationOutput = undefined | { message: string; value?: string
 
 export type FormValidationItem = (value?: any) => FormValidationOutput;
 
-export interface FormInputApi {
-	name: string;
-	type?: HTMLInputTypeAttribute;
+type HtmlInputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+
+export interface FormInputApi
+	extends Pick<
+		HtmlInputProps,
+		| 'autoComplete'
+		| 'defaultValue'
+		| 'disabled'
+		| 'inputMode'
+		| 'max'
+		| 'maxLength'
+		| 'min'
+		| 'minLength'
+		| 'name'
+		| 'placeholder'
+		| 'readOnly'
+		| 'required'
+		| 'type'
+	> {
 	label?: React.ReactNode;
-	defaultValue?: any;
 	validations?: FormValidationItem[];
 	render?: FormInputRender;
 	variant?: string;
