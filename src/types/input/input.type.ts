@@ -36,12 +36,12 @@ export interface FormInputApi
 		| 'maxLength'
 		| 'min'
 		| 'minLength'
-		| 'name'
 		| 'placeholder'
 		| 'readOnly'
 		| 'required'
 		| 'type'
 	> {
+	name: string;
 	label?: React.ReactNode;
 	validations?: FormValidationItem[];
 	render?: FormInputRender;
