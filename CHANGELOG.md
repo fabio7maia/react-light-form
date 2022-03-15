@@ -1,3 +1,11 @@
+# [1.7.0](https://github.com/fabio7maia/react-light-form/compare/v1.6.0...v1.7.0) (2022-02-24)
+
+
+### Features
+
+* mark name prop is required ([1a9d513](https://github.com/fabio7maia/react-light-form/commit/1a9d513b96df4289367d89174723d2ad01dd4cf4))
+* refined form input props ([abe60c3](https://github.com/fabio7maia/react-light-form/commit/abe60c3f7d08f9db68597e4cddd167d3bf4ba69f))
+
 # [1.6.0](https://github.com/fabio7maia/react-light-form/compare/v1.5.0...v1.6.0) (2022-02-14)
 
 
