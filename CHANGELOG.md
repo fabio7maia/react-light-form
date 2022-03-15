@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/fabio7maia/react-light-form/compare/v1.7.0...v1.8.0) (2022-03-15)
+
+
+### Features
+
+* aligned all api of form customization ([52bfeef](https://github.com/fabio7maia/react-light-form/commit/52bfeef838ce59fbfbb913df434ee9e495340b3e))
+
 # [1.7.0](https://github.com/fabio7maia/react-light-form/compare/v1.6.0...v1.7.0) (2022-02-24)
 
 
