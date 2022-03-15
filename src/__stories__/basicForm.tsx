@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form } from '../components';
 import { useForm, useLogger } from '../hooks';
+import { InputSimple } from './inputSimple';
 
 export const BasicForm: React.FC = () => {
 	const logger = useLogger();
@@ -40,6 +41,7 @@ export const BasicForm: React.FC = () => {
 				label="Email"
 				validations={[value => (value ? undefined : { message: 'Required' })]}
 			/>
+			<InputSimple name="married" label="married" />
 			<button type="button" style={{ margin: '50px 0 0 0' }} onClick={submit}>
 				Save
 			</button>

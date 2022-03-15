@@ -56,20 +56,23 @@ class FormConfiguration {
 		variant,
 	}: FormConfigurationGetConfigMethodInput): ((props: FormInputApi) => React.ReactNode | undefined) => {
 		const config = FormConfiguration._config;
-
-		if (!config) {
-			return;
-		}
-
-		if (typeof config.input['default'] === 'object') {
-			if (variant && config.input[variant][type]) {
-				return config.input[variant][type];
+		try {
+			if (!config) {
+				return;
 			}
 
-			return config.input['default'][type];
-		}
+			if (typeof config.input['default'] === 'object') {
+				if (variant && config.input[variant][type]) {
+					return config.input[variant][type];
+				}
 
-		return config.input[type] as (props: FormInputApi) => React.ReactNode | undefined;
+				return config.input['default'][type];
+			}
+
+			return config.input[type] as (props: FormInputApi) => React.ReactNode | undefined;
+		} catch (err) {
+			return config.input[type] as (props: FormInputApi) => React.ReactNode | undefined;
+		}
 	};
 	static getConfigValidations = (): FormConfigurationValidations | undefined => {
 		return FormConfiguration._config.validations;

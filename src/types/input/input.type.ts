@@ -13,7 +13,13 @@ interface BaseFormInputApi {
 }
 
 export interface FormInputRender {
-	container?: (props: BaseFormInputApi) => React.ReactNode;
+	container?: (
+		props: BaseFormInputApi & {
+			labelContainerRender: () => React.ReactNode;
+			inputContainerRender: () => React.ReactNode;
+			errorContainerRender: () => React.ReactNode;
+		}
+	) => React.ReactNode;
 	labelContainer?: (props: BaseFormInputApi) => React.ReactNode;
 	inputContainer?: (props: BaseFormInputApi) => React.ReactNode;
 	errorContainer?: (props: BaseFormInputApi) => React.ReactNode;
@@ -50,3 +56,5 @@ export interface FormInputApi
 	onChange?: (value?: any) => void;
 	onFocus?: () => void;
 }
+
+export type FormInputApiChildren = FormInputApi & { error?: React.ReactNode; value: any };
