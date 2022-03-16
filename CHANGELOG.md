@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/fabio7maia/react-light-form/compare/v1.8.0...v1.9.0) (2022-03-16)
+
+
+### Features
+
+* improved docs ([3cb5fd6](https://github.com/fabio7maia/react-light-form/commit/3cb5fd6e88491045c031531bc4c7c49abcf9acde))
+
 # [1.8.0](https://github.com/fabio7maia/react-light-form/compare/v1.7.0...v1.8.0) (2022-03-15)
 
 
